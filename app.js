@@ -113,7 +113,7 @@ receiptInput.addEventListener('change', (e) => {
 });
 
 // Mocking API transaction pipeline execution states
-const API_URL = 'https://no-fuss-receipt-grabber.onrender.com'
+const API_URL = 'http://localhost:3000'
 async function handleImageCapture(file) {
     loadingState.classList.remove('hidden');
     

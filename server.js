@@ -9,11 +9,25 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Initialize the official, stable Google Generative AI client
+if (!process.env.GEMINI_API_KEY) {
+    console.error('ERROR: GEMINI_API_KEY is not set in .env file');
+    process.exit(1);
+}
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // Set up the memory storage engine for rapid processing without disk overhead
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const upload = multer({ 
+    storage: storage,
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Only image files are allowed'), false);
+        }
+    }
+});
 
 // Enable CORS and parse incoming payloads
 app.use(express.json());
@@ -30,8 +44,8 @@ app.post('/api/scan', upload.single('receipt'), async (req, res) => {
             return res.status(400).json({ error: 'No image file uploaded.' });
         }
 
-        // Initialize Gemini 2.5 Flash for multimodal visual extraction
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+        // Initialize Gemini 1.5 Flash for multimodal visual extraction
+        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
         // Convert raw memory buffer to the inline format Gemini expects
         const imagePart = {
