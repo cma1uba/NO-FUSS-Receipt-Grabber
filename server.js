@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 dotenv.config();
+console.log(`Key loaded successfully? ${process.env.GEMINI_API_KEY ? 'Yes ✅' : 'No ❌'}`);
 
 const app = express();
 const port = process.env.PORT || 3000;
