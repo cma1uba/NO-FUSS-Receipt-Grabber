@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fast-Receipt // EveryoneShipsNow</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        /* Smooth transitions for interactive state changes */
+        .interactive-card { transition: all 0.2s ease-in-out; }
+    </style>
+    
+    </head>
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen antialiased">
+
+    <div class="max-w-md mx-auto px-4 py-6 md:max-w-4xl lg:max-w-5xl">
+        
+        <header class="flex justify-between items-center mb-8 border-b border-slate-800 pb-4">
+            <div>
+                <h1 class="text-2xl font-black tracking-tight bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+                    NO-FUSS
+                </h1>
+                <p class="text-xs text-slate-400">Receipt Grabber</p>
+            </div>
+            <div class="text-right">
+                <span class="text-xs uppercase font-semibold text-slate-400 block tracking-wider">Total Tracked</span>
+                <span id="grandTotal" class="text-2xl font-bold text-emerald-400">$0.00</span>
+            </div>
+        </header>
+
+       <main class="grid grid-cols-1 md:grid-cols-12 gap-6">
+    
+    <section class="md:col-span-5 space-y-4">
+        <div class="bg-slate-800/80 backdrop-blur-md border border-slate-700/50 rounded-2xl p-6 shadow-2xl shadow-black/40">
+            <h2 class="text-base font-bold tracking-tight text-slate-200 mb-4 flex items-center gap-2">
+                <span class="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 text-sm">📸</span> 
+                Scan New Receipt
+            </h2>
+            
+            <label id="dropZone" class="interactive-card flex flex-col items-center justify-center border-2 border-dashed border-slate-700 hover:border-emerald-500/80 bg-slate-900/40 hover:bg-slate-900/80 rounded-xl p-10 text-center cursor-pointer group">
+                <input type="file" id="receiptInput" accept="image/*" capture="environment" class="hidden">
+                
+                <div class="w-14 h-14 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center mb-4 group-hover:scale-105 group-hover:border-emerald-500/30 group-hover:shadow-lg group-hover:shadow-emerald-500/5 transition-all duration-300">
+                    <span class="text-2xl text-slate-400 group-hover:text-emerald-400 transition-colors">⚡</span>
+                </div>
+                
+                <p class="text-sm font-semibold text-slate-200 group-hover:text-emerald-300 transition-colors">Snap device camera</p>
+                <p class="text-xs text-slate-500 mt-1">or drag image file right here</p>
+            </label>
+
+            <div id="loadingState" class="hidden mt-5 p-5 bg-slate-900/80 rounded-xl border border-slate-700/60 text-center space-y-3 animate-pulse">
+                <div class="animate-spin inline-block w-6 h-6 border-[3px] border-current border-t-transparent text-emerald-400 rounded-full"></div>
+                <div class="space-y-1">
+                    <p class="text-xs font-bold tracking-wide text-slate-200">Reading with Gemini AI</p>
+                    <p class="text-[11px] text-slate-500">Parsing data structures into JSON lines...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="md:col-span-7">
+        <div class="bg-slate-800/80 backdrop-blur-md border border-slate-700/50 rounded-2xl p-6 shadow-2xl shadow-black/40 min-h-[360px] flex flex-col">
+            
+            <div class="flex justify-between items-center mb-5">
+                <h2 class="text-base font-bold tracking-tight text-slate-200 flex items-center gap-2">
+                    <span class="p-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 text-sm">📋</span> 
+                    Interactive Ledger
+                </h2>
+                
+                <button id="exportCsvBtn" class="bg-slate-900/80 hover:bg-emerald-500 text-slate-300 hover:text-slate-950 text-xs font-bold px-4 py-2 rounded-xl border border-slate-700/80 hover:border-emerald-400 transition-all duration-200 shadow-lg cursor-pointer hidden">
+                    📥 Export CSV File
+                </button>
+            </div>
+
+            <div class="overflow-x-auto flex-grow rounded-xl bg-slate-900/20 border border-slate-700/30">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="text-[11px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-700/60 bg-slate-900/40">
+                            <th class="py-3.5 px-4">Merchant Target</th>
+                            <th class="py-3.5 px-3">Date Matrix</th>
+                            <th class="py-3.5 px-3 text-right">Extracted Sum</th>
+                            <th class="py-3.5 px-4 text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ledgerBody" class="text-xs divide-y divide-slate-800/60">
+                        </tbody>
+                </table>
+                
+                <div id="emptyState" class="text-center py-16 text-slate-500 transition-opacity duration-300">
+                    <div class="text-4xl mb-3 filter grayscale drop-shadow-md">📥</div>
+                    <p class="text-xs font-medium text-slate-400">Your ledger is clean</p>
+                    <p class="text-[11px] text-slate-600 mt-0.5">Upload a receipt to invoke data extraction parsing.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
