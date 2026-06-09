@@ -87,5 +87,5 @@ app.post('/api/scan', upload.single('receipt'), async (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`🚀 Fast-Receipt engine running at http://localhost:${port}`);
+    console.log(`🚀 Fast-Receipt engine running at https://no-fuss-receipt-grabber.onrender.com`);
 });
