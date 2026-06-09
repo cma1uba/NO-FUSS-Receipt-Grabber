@@ -113,6 +113,7 @@ receiptInput.addEventListener('change', (e) => {
 });
 
 // Mocking API transaction pipeline execution states
+const API_URL = 'https://no-fuss-receipt-grabber.onrender.com'
 async function handleImageCapture(file) {
     loadingState.classList.remove('hidden');
     
@@ -121,7 +122,7 @@ async function handleImageCapture(file) {
     formData.append('receipt', file);
 
     try {
-        const response = await fetch('http://localhost:3000/api/scan', {
+        const response = await fetch(`${API_URL}/api/scan`, {
             method: 'POST',
             body: formData
         });
