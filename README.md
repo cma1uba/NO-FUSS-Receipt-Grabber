@@ -1,5 +1,7 @@
 # NO-FUSS-Receipt-Grabber
 
+[https://no-fuss-receipt-grabber.netlify.app/]
+
 A lightweight receipt capture app that uploads receipt images to a backend AI engine for text extraction and stores the parsed vendor, date, and amount in a local ledger.
 
 ## Features
