@@ -5,6 +5,8 @@ let expenses = JSON.parse(localStorage.getItem('fast_receipts')) || [];
 const receiptInput = document.getElementById('receiptInput');
 const dropZone = document.getElementById('dropZone');
 const loadingState = document.getElementById('loadingState');
+const errorState = document.getElementById('errorState');
+const errorMessage = document.getElementById('errorMessage');
 const ledgerBody = document.getElementById('ledgerBody');
 const grandTotal = document.getElementById('grandTotal');
 const emptyState = document.getElementById('emptyState');
@@ -14,6 +16,19 @@ const exportCsvBtn = document.getElementById('exportCsvBtn');
 function initDashboard() {
     renderLedger();
     setupDragAndDrop();
+    clearError();
+}
+
+function showError(message) {
+    if (!errorState || !errorMessage) return;
+    errorMessage.textContent = message;
+    errorState.classList.remove('hidden');
+}
+
+function clearError() {
+    if (!errorState || !errorMessage) return;
+    errorState.classList.add('hidden');
+    errorMessage.textContent = '';
 }
 
 // Render dynamic rows in the table matrix
@@ -115,6 +130,7 @@ receiptInput.addEventListener('change', (e) => {
 // Mocking API transaction pipeline execution states
 const API_URL = 'http://localhost:3000'
 async function handleImageCapture(file) {
+    clearError();
     loadingState.classList.remove('hidden');
     
     // Assemble the multi-part form payload
@@ -127,7 +143,16 @@ async function handleImageCapture(file) {
             body: formData
         });
 
-        if (!response.ok) throw new Error('Network extraction failed');
+        if (!response.ok) {
+            let errorText = 'Network extraction failed.';
+            try {
+                const payload = await response.json();
+                errorText = payload?.error || payload?.details || errorText;
+            } catch {
+                errorText = response.statusText || errorText;
+            }
+            throw new Error(errorText);
+        }
 
         const extractedExpense = await response.json();
         
@@ -136,10 +161,11 @@ async function handleImageCapture(file) {
         localStorage.setItem('fast_receipts', JSON.stringify(expenses));
         
         renderLedger();
+        clearError();
 
     } catch (error) {
         console.error('Error scanning receipt:', error);
-        alert('AI was unable to read this image clearly. Please try again or upload a sharper snap.');
+        showError(error.message || 'AI was unable to read this image clearly. Please try again or upload a sharper snap.');
     } finally {
         loadingState.classList.add('hidden');
     }
